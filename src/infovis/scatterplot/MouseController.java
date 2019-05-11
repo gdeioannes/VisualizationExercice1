@@ -27,8 +27,8 @@ public class MouseController implements MouseListener, MouseMotionListener {
 	}
 
 	public void mouseReleased(MouseEvent arg0) {
+		//Release Selection
 		dragFlag=false;
-		
 	}
 
 	public void mouseDragged(MouseEvent e) {

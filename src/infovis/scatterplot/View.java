@@ -23,14 +23,16 @@ public class View extends JPanel {
 	    private int rectOffset=60; 
 	    private Set<String> nameList= new HashSet<String>();
 	    
-		Font font =  new Font("Helvetic", Font.PLAIN, 7);
+		Font font =  new Font("Helvetic", Font.PLAIN, 6);
 		AffineTransform affineTransform = new AffineTransform();
 		Font rotatedFont;
-		
 		
 		Color whiteColor = Color.white;
 		Color blackColor = Color.black;
 		Color redColor = Color.red;
+		
+		//Values for data drawing
+		double minW, maxW,minH,maxH;
 
 		View(){
 			affineTransform.rotate(Math.toRadians(90), 0, 0);
@@ -49,22 +51,8 @@ public class View extends JPanel {
 		public void paint(Graphics g) {
 			
 			Graphics2D g2D=(Graphics2D) g;
-			 			
-	        /*for (String l : model.getLabels()) {
-				Debug.print(l);
-				Debug.print(",  ");
-				Debug.println("");
-			}
-			for (Range range : model.getRanges()) {
-				Debug.print(range.toString());
-				Debug.print(",  ");
-				Debug.println("");
-			}
-			for (Data d : model.getList()) {
-				Debug.print(d.toString());
-				Debug.println("");
-			}*/
 			
+			//Draw white Background
 			g2D.setStroke(new BasicStroke(0));
 			Rectangle2D backgroundRect= new Rectangle2D.Double(0, 0, this.getWidth(), this.getHeight());
 			
@@ -72,6 +60,7 @@ public class View extends JPanel {
 			g2D.fill(backgroundRect);
 			g2D.draw(backgroundRect);
 			
+			//Back to black color
 			g2D.setColor(blackColor);
 			
 			//Draw Grid and Data
@@ -85,11 +74,11 @@ public class View extends JPanel {
 					Rectangle2D recGrid = new Rectangle2D.Double(posX,posY,rectW,rectW);
 					g2D.draw(recGrid);
 					
-					//Min and Max Values
-					double minW=model.getRanges().get(row).getMin();
-					double maxW=model.getRanges().get(row).getMax();
-					double minH=model.getRanges().get(col).getMin();
-					double maxH=model.getRanges().get(col).getMax();
+					//Min and Max Values for data drawing
+					minW=model.getRanges().get(row).getMin();
+					maxW=model.getRanges().get(row).getMax();
+					minH=model.getRanges().get(col).getMin();
+					maxH=model.getRanges().get(col).getMax();
 					
 					//Data points Drawing
 					for(int value=0;value<model.getList().size();value++) {
