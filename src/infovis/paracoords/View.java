@@ -95,8 +95,10 @@ public class View extends JPanel {
 				
 				
 				if(linePosX>markerRectangle.getX() && linePosX<markerRectangle.getX()+markerRectangle.getWidth() &&
-						smallPosY>markerRectangle.getY() && smallPosY<markerRectangle.getY()+markerRectangle.getHeight() || redLineFlag) {
+						smallPosY>markerRectangle.getY() && smallPosY<markerRectangle.getY()+markerRectangle.getHeight() 
+						|| nameList.contains(model.getList().get(row).getLabel())) {
 					//Store the point in a List and draw red
+					nameList.add(model.getList().get(row).getLabel());
 					g2D.setStroke(new BasicStroke(2));
 					g2D.setColor(redColor);
 					redLineFlag=true;
