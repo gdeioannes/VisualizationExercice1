@@ -28,8 +28,7 @@ public class MouseController implements MouseListener, MouseMotionListener {
 
 	public void mouseReleased(MouseEvent arg0) {
 		dragFlag=false;
-		view.getMarkerRectangle().setRect(0,0,0,0);
-		view.repaint();
+		
 	}
 
 	public void mouseDragged(MouseEvent e) {

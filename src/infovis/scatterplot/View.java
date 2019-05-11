@@ -23,7 +23,20 @@ public class View extends JPanel {
 	    private int rectOffset=60; 
 	    private Set<String> nameList= new HashSet<String>();
 	    
+		Font font =  new Font("Helvetic", Font.PLAIN, 7);
+		AffineTransform affineTransform = new AffineTransform();
+		Font rotatedFont;
+		
+		
+		Color whiteColor = Color.white;
+		Color blackColor = Color.black;
+		Color redColor = Color.red;
 
+		View(){
+			affineTransform.rotate(Math.toRadians(90), 0, 0);
+			rotatedFont = font.deriveFont(affineTransform);
+		}
+		
 		public Set<String> getSelectedList() {
 			return nameList;			
 		}
@@ -34,7 +47,6 @@ public class View extends JPanel {
 		 
 		@Override
 		public void paint(Graphics g) {
-			setBounds(0, 0, 1000, 1000);
 			
 			Graphics2D g2D=(Graphics2D) g;
 			 			
@@ -53,10 +65,6 @@ public class View extends JPanel {
 				Debug.println("");
 			}*/
 			
-			Color whiteColor = Color.white;
-			Color blackColor = Color.black;
-			Color redColor = Color.red;
-			
 			g2D.setStroke(new BasicStroke(0));
 			Rectangle2D backgroundRect= new Rectangle2D.Double(0, 0, this.getWidth(), this.getHeight());
 			
@@ -66,20 +74,24 @@ public class View extends JPanel {
 			
 			g2D.setColor(blackColor);
 			
-			//Draw Rects
+			//Draw Grid and Data
 			for(int row =0;row<model.getLabels().size();row++) {
 				for(int col =0;col<model.getLabels().size();col++) {
 					
+					//Grid
 					int posX=rectW*row+rectOffset;
 					int posY=rectW*col+rectOffset;
 					g2D.setStroke(new BasicStroke(1));
-					Rectangle2D recBig = new Rectangle2D.Double(posX,posY,rectW,rectW);
+					Rectangle2D recGrid = new Rectangle2D.Double(posX,posY,rectW,rectW);
+					g2D.draw(recGrid);
+					
+					//Min and Max Values
 					double minW=model.getRanges().get(row).getMin();
 					double maxW=model.getRanges().get(row).getMax();
 					double minH=model.getRanges().get(col).getMin();
 					double maxH=model.getRanges().get(col).getMax();
-					//g2D.setColor(whiteColor);
-					g2D.draw(recBig);
+					
+					//Data points Drawing
 					for(int value=0;value<model.getList().size();value++) {
 						
 						double valueRow=model.getList().get(value).getValue(row);
@@ -88,15 +100,19 @@ public class View extends JPanel {
 						double smallPosX=(rectW*(valueRow-minW)/(maxW-minW));
 						double smallPosY=(rectW*(valueCol-minH)/(maxH-minH));
 						
-						g2D.setStroke(new BasicStroke(2));
+						//Pick Data points
 						if(posX+smallPosX>markerRectangle.getX() && posX+smallPosX<markerRectangle.getX()+markerRectangle.getWidth() && 
 								posY+smallPosY>markerRectangle.getY() && posY+smallPosY<markerRectangle.getY()+markerRectangle.getHeight() || nameList.contains(model.getList().get(value).getLabel())) {
+							//Store the point in a List and draw red
+							
 							nameList.add(model.getList().get(value).getLabel());
-							System.out.println(model.getList().get(value).getLabel());
+							g2D.setStroke(new BasicStroke(2));
 							g2D.setColor(redColor);
 						}else {
+							g2D.setStroke(new BasicStroke(1));
 							g2D.setColor(blackColor);
 						}
+						//Draw Data point
 						
 						Rectangle2D recSmall = new Rectangle2D.Double(posX+smallPosX,posY+smallPosY,1,1);
 						g2D.draw(recSmall);
@@ -104,27 +120,26 @@ public class View extends JPanel {
 					}
 				}
 			}
-			g2D.setColor(redColor);
-			g2D.draw(markerRectangle);
 			
-			g2D.setColor(blackColor);
 			
 			//DrawLabels
-			Font font =  new Font("Helvetic", Font.PLAIN, 7);
-			AffineTransform affineTransform = new AffineTransform();
-			affineTransform.rotate(Math.toRadians(90), 0, 0);
-			Font rotatedFont = font.deriveFont(affineTransform);
-			
+			//Pint Labels
 			for(int i=0;i<model.getLabels().size();i++) {
+				
+				//Horizontal
 				g2D.setFont(font);
 				String label1=model.getLabels().get(i);
-				String minMax=model.getRanges().get(i).getMin()+" "+model.getRanges().get(i).getMax();
 				g2D.drawString(label1, rectW*i+rectOffset,rectOffset/2);
-				g2D.drawString(minMax, rectW*i+rectOffset,rectOffset/2+rectOffset/4);
+				
+				//Vertical Labels
 				g2D.setFont(rotatedFont);
 				g2D.drawString(label1, rectW/2, rectW*i+rectOffset);
-				g2D.drawString(minMax, rectW/4, rectW*i+rectOffset);
 			}
+			
+			//Draw Marker
+			g2D.setColor(redColor);
+			g2D.draw(markerRectangle);
+			g2D.setColor(blackColor);
 			
 		}
 		
