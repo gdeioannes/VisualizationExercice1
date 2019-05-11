@@ -49,7 +49,6 @@ public class Model {
 		this.dim = dim;
 	}
 	
-	
 	public void importValues() {
 		File file = new File("cameras.ssv");
 	    Debug.p(file.getAbsoluteFile().toString());

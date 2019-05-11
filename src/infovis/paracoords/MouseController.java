@@ -16,7 +16,9 @@ public class MouseController implements MouseListener, MouseMotionListener {
 	int posx=0,posy=0;
 	
 	public void mouseClicked(MouseEvent e) {
-		
+		view.getPoint().x=e.getX();
+		view.getPoint().y=e.getY();
+		view.repaint();
 	}
 
 	public void mouseEntered(MouseEvent e) {
