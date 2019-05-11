@@ -2,6 +2,8 @@ package infovis.scatterplot;
 
 import infovis.gui.GUI;
 
+import java.awt.Dimension;
+
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -30,7 +32,9 @@ public class Scatterplot {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				GUI application = new GUI();
+				
 				application.setView(new Scatterplot().getView());
+				application.getJFrame().setBounds(0, 0, 850, 1000);
 				application.getJFrame().setVisible(true);
 			}
 		});
