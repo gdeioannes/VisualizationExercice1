@@ -40,7 +40,6 @@ public class MouseController implements MouseListener, MouseMotionListener {
 		}
 		view.getMarkerRectangle().setRect(posx,posy,e.getX()-posx,e.getY()-posy);
 		view.repaint();
-		
 	}
 
 	public void mouseMoved(MouseEvent arg0) {

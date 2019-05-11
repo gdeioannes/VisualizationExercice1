@@ -93,7 +93,6 @@ public class View extends JPanel {
 						if(posX+smallPosX>markerRectangle.getX() && posX+smallPosX<markerRectangle.getX()+markerRectangle.getWidth() && 
 								posY+smallPosY>markerRectangle.getY() && posY+smallPosY<markerRectangle.getY()+markerRectangle.getHeight() || nameList.contains(model.getList().get(value).getLabel())) {
 							//Store the point in a List and draw red
-							
 							nameList.add(model.getList().get(value).getLabel());
 							g2D.setStroke(new BasicStroke(2));
 							g2D.setColor(redColor);

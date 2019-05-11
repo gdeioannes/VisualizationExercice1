@@ -12,6 +12,9 @@ public class MouseController implements MouseListener, MouseMotionListener {
 	private Model model = null;
 	Shape currentShape = null;
 	
+	private boolean dragFlag=false;
+	int posx=0,posy=0;
+	
 	public void mouseClicked(MouseEvent e) {
 		
 	}
@@ -28,12 +31,20 @@ public class MouseController implements MouseListener, MouseMotionListener {
 
 	}
 
-	public void mouseReleased(MouseEvent e) {
-
+	public void mouseReleased(MouseEvent arg0) {
+		//Release Selection
+		dragFlag=false;
 	}
 
 	public void mouseDragged(MouseEvent e) {
-
+		if(!dragFlag) {
+			posx=e.getX();
+			posy=e.getY();
+			view.getSelectedList().clear();
+			dragFlag=true;
+		}
+		view.getMarkerRectangle().setRect(posx,posy,e.getX()-posx,e.getY()-posy);
+		view.repaint();
 	}
 
 	public void mouseMoved(MouseEvent e) {
