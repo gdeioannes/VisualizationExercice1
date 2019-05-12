@@ -127,15 +127,7 @@ public class View extends JPanel {
 				
 				double smallPosY=((this.getHeight()-borderOffset*2)*(value-min)/(max-min))+borderOffset;
 				
-				//Draw Small Rectangle
-				g2D.drawRect(linePosX, (int)smallPosY, 2, 2);
-				
-				//DrawText
-				if(col==0) {
-					g2D.drawString(model.getList().get(row).getLabel(),0+borderOffset/2,(int)smallPosY);
-				}
-				
-				
+				//Selected
 				if(linePosX>markerRectangle.getX() && linePosX<markerRectangle.getX()+markerRectangle.getWidth() &&
 						smallPosY>markerRectangle.getY() && smallPosY<markerRectangle.getY()+markerRectangle.getHeight() 
 						|| nameList.contains(model.getList().get(row).getLabel())) {
@@ -149,12 +141,23 @@ public class View extends JPanel {
 					g2D.setColor(blackColor);
 				}
 				
-				if(saveLastPosX>0) {
-					//Draw line
+				if(nameList.size()==0 || nameList.contains(model.getList().get(row).getLabel())) {
+					//Draw Small Rectangle
+					g2D.drawRect(linePosX, (int)smallPosY, 2, 2);
 					
-					g2D.drawLine(saveLastPosX, saveLastPosY, linePosX, (int)smallPosY);
-					g2D.setStroke(new BasicStroke(0));
+					//DrawText
+					if(col==0) {
+						
+						g2D.drawString(model.getList().get(row).getLabel(),0+borderOffset/2,(int)smallPosY);
+					}
+					
+					if(saveLastPosX>0) {
+						//Draw line
+						g2D.drawLine(saveLastPosX, saveLastPosY, linePosX, (int)smallPosY);
+						g2D.setStroke(new BasicStroke(0));
+					}
 				}
+				
 				//Save Position to draw Lines
 				saveLastPosX=(int)linePosX;
 				saveLastPosY=(int)smallPosY;
