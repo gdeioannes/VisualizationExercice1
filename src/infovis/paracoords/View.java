@@ -30,6 +30,7 @@ public class View extends JPanel {
 	Color whiteColor= Color.WHITE;
 	Color blackColor= Color.BLACK;
 	Color redColor = Color.RED;
+	Color pinkColor = Color.PINK;
 	int saveLastPosX=-1;
 	int saveLastPosY=-1;
 	private Rectangle2D markerRectangle = new Rectangle2D.Double(0,0,0,0);
@@ -41,7 +42,10 @@ public class View extends JPanel {
 	int pickLabel=-1;
 	Point clickPoint=new Point();
 	ArrayList<Integer> drawAxisOrder= new ArrayList<Integer>();
-	
+	public boolean flagDragAxis=false, flagChangeLabel=false;;
+	int clickPosX=0,clickPosY=0;
+	int dragMousePosX;
+	public String pickedLabel="";
 	
 	View(){
 		
@@ -96,21 +100,56 @@ public class View extends JPanel {
 			int linePosX=borderOffset+lineSpace*drawCounter+borderOffset/2;
 			g2D.drawLine(linePosX, borderOffset, linePosX, this.getHeight()-borderOffset);
 			g2D.setFont(font);
-			g2D.drawString(label,linePosX-borderOffset/2,borderOffset/2);
+			
+			//DragAxistFunction
+			g2D.setColor(pinkColor);
+			g2D.drawRect(linePosX-lineSpace/2,0, lineSpace,borderOffset);
+			
+			if(clickPosX >linePosX-lineSpace/2 && clickPosX<linePosX+lineSpace/2 && clickPosY<borderOffset && !flagDragAxis && !flagChangeLabel) {
+				flagDragAxis=true;
+				flagChangeLabel=true;
+				pickedLabel=label;
+				pickLabel=drawCounter;
+				System.out.println("Pick Label:"+label);
+			}
+			
+			//DRAG label
+			if(flagDragAxis && pickedLabel==label) {
+				g2D.setColor(blackColor);
+				g2D.drawString(label,dragMousePosX,borderOffset/2);
+			}
+			
+			//DROP Label
+			if(pickedLabel!="" && !flagDragAxis) {
+				
+				System.out.println("Drop Label");
+				System.out.println("X:"+clickPosX+" "+(linePosX-lineSpace/2));
+				if(clickPosX>linePosX-lineSpace/2 && clickPosX<linePosX+lineSpace/2) {
+					System.out.println("Change Label:"+label + " With:"+pickedLabel);
+					pickedLabel="";
+					flagChangeLabel=false;
+					changeData(drawCounter);
+					break;
+				}
+			}
+			
+			//Draw Text Labels
+			if(pickedLabel!=label) {
+				g2D.setColor(blackColor);
+				g2D.drawString(label,linePosX-borderOffset/2,borderOffset/2);
+			}
 			
 			if(clickPoint.x>linePosX-(lineSpace/2) && clickPoint.x<linePosX+lineSpace/2) {
 				if(pickLabel==-1 && !changeDataFlag) {
-					System.out.println("Pick label");
+					//System.out.println("Pick label");
 					pickLabel=drawCounter;
 				}else if(pickLabel!=-1){
-					System.out.println("Change label");
+					//System.out.println("Change label");
 					changeData(drawCounter);
 				}else {
 					changeDataFlag=false;
-				}
-				
+				}	
 			}
-			
 			drawCounter++;
 		}
 		
@@ -127,10 +166,8 @@ public class View extends JPanel {
 				
 				double smallPosY=((this.getHeight()-borderOffset*2)*(value-min)/(max-min))+borderOffset;
 				
-				//Selected
-				if(linePosX>markerRectangle.getX() && linePosX<markerRectangle.getX()+markerRectangle.getWidth() &&
-						smallPosY>markerRectangle.getY() && smallPosY<markerRectangle.getY()+markerRectangle.getHeight() 
-						|| nameList.contains(model.getList().get(row).getLabel())) {
+				//Selected input Rectangle
+				if( checkMarkerRectangle(linePosX,(int)smallPosY)|| nameList.contains(model.getList().get(row).getLabel())) {
 					//Store the point in a List and draw red
 					nameList.add(model.getList().get(row).getLabel());
 					g2D.setStroke(new BasicStroke(1));
@@ -170,14 +207,27 @@ public class View extends JPanel {
 		}
 		
 		//Draw Marker
-		g2D.setColor(redColor);
-		g2D.draw(markerRectangle);
+		
+		if(markerRectangle.getCenterY()>borderOffset && !flagDragAxis) {
+			g2D.setColor(redColor);
+			g2D.draw(markerRectangle);
+		}
+		
 		g2D.setColor(blackColor);
 
 		drawCounter=initCounter;
 		
 	}
 
+	boolean checkMarkerRectangle(int linePosX, int smallPosY) {
+		if(linePosX>markerRectangle.getX() && linePosX<markerRectangle.getX()+markerRectangle.getWidth() &&
+		smallPosY>markerRectangle.getY() && smallPosY<markerRectangle.getY()+markerRectangle.getHeight() &&
+		markerRectangle.getY()>borderOffset && !flagDragAxis) {
+			return true;
+		}
+		return false;
+	}
+	
 	@Override
 	public void update(Graphics g) {
 		paint(g);
@@ -191,7 +241,6 @@ public class View extends JPanel {
 		for(int i=0;i<model.getLabels().size();i++) {
 			drawAxisOrder.add(i);
 		}
-		System.out.println("Aaxis drawing order set:"+drawAxisOrder.size());
 	}
 	
 	public void setModel(Model model) {

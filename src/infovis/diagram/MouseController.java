@@ -27,9 +27,14 @@ public class MouseController implements MouseListener,MouseMotionListener {
 	 private DrawingEdge drawingEdge = null;
 	 private boolean fisheyeMode;
 	 private GroupingRectangle groupRectangle;
+	 private Fisheye fishEye= new Fisheye();
 	/*
 	 * Getter And Setter
 	 */
+	 
+	 MouseController(){
+		 fishEye.view=view;
+	 }
 	 public Element getSelectedElement(){
 		 return selectedElement;
 	 }
@@ -165,6 +170,7 @@ public class MouseController implements MouseListener,MouseMotionListener {
 	}
 	
 	public void mouseDragged(MouseEvent e) {
+		fishEye.setMouseCoords(e.getX(), e.getY(),view);
 		int x = e.getX();
 		int y = e.getY();
 		double scale = view.getScale();
@@ -185,6 +191,7 @@ public class MouseController implements MouseListener,MouseMotionListener {
 		view.repaint();
 	}
 	public void mouseMoved(MouseEvent e) {
+		
 	}
 	public boolean isDrawingEdges() {
 		return edgeDrawMode;

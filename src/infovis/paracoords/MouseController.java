@@ -33,12 +33,17 @@ public class MouseController implements MouseListener, MouseMotionListener {
 
 	}
 
-	public void mouseReleased(MouseEvent arg0) {
+	public void mouseReleased(MouseEvent e) {
 		//Release Selection
 		dragFlag=false;
+		view.flagDragAxis=false;
+		view.flagChangeLabel=true;
+		view.repaint();
 	}
 
 	public void mouseDragged(MouseEvent e) {
+		view.clickPosX=e.getX();
+		view.clickPosY=e.getY();
 		if(!dragFlag) {
 			posx=e.getX();
 			posy=e.getY();
@@ -46,11 +51,12 @@ public class MouseController implements MouseListener, MouseMotionListener {
 			dragFlag=true;
 		}
 		view.getMarkerRectangle().setRect(posx,posy,e.getX()-posx,e.getY()-posy);
+		view.dragMousePosX=e.getX();
 		view.repaint();
 	}
 
 	public void mouseMoved(MouseEvent e) {
-
+		
 	}
 
 	public View getView() {

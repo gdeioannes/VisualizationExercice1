@@ -53,8 +53,6 @@ public class MenuController {
 	}
 	public void newVertex(){
 		//Debug.print("MenuController.newVertex invoked");
-		Vertex v = new Vertex(0,0,60,20);
-		getModel().addVertex(v);
 		view.repaint();
 	}
 	public void newLabel(){

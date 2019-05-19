@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.Rectangle2D.Double;
 import java.awt.geom.RectangularShape;
 
 public class Vertex implements Element {
@@ -21,7 +22,10 @@ public class Vertex implements Element {
 	RectangularShape shape ;
 	private int id = 0;
 	private Model groupedElements;
-	
+	public double transformFishX=0;
+	public double transformFishY=0;
+	double vertexRadius=40;
+	public double vertexRadiusTranform=20;
 	
 	public Vertex (Vertex vertex){
 		this.shape = new Ellipse2D.Double(vertex.getX(),vertex.getY(),vertex.getWidth(),vertex.getHeight());
@@ -31,14 +35,10 @@ public class Vertex implements Element {
 		this.font = vertex.font;
 		this.id = vertex.getID();
 	}
-	public Vertex(double x, double y, double width, double height){
-		//this.shape = new Rectangle2D.Double(x,y,width,height);
-		this.shape =  new Ellipse2D.Double(x,y,width,height);
-		this.id = Model.generateNewID();
-	}
 	public Vertex(double x, double y){
-		//this.shape = new Rectangle2D.Double(x,y,width,height);
-		this.shape =  new Ellipse2D.Double(x,y,STD_WIDTH,STD_HEIGHT);
+		this.shape =  new Ellipse2D.Double(x,y,vertexRadius,vertexRadius);
+		transformFishX=x;
+		transformFishY=y;
 		this.id = Model.generateNewID();
 	}
 	public boolean contains(double x, double y) {
@@ -49,9 +49,9 @@ public class Vertex implements Element {
 	public void paint(Graphics2D g2D) {
 		//Debug.print("paint Vertex");
 		g2D.setColor(color);
-		g2D.fill(shape);
+		g2D.fill(new Ellipse2D.Double(transformFishX-vertexRadiusTranform/2,transformFishY-vertexRadiusTranform/2,vertexRadiusTranform,vertexRadiusTranform));
 		g2D.setColor(Color.BLACK);
-		g2D.draw(shape);
+		//g2D.draw(shape);
 	}
 
 	public double getX() {
